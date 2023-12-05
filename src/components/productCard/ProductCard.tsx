@@ -4,24 +4,30 @@ import { styles } from '../../styles/style'
 import items from '../../assets/images/item.png';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import { useNavigate } from 'react-router-dom';
 
-const ProductCard = () => {
+const ProductCard = (data:any) => {
     const matches = useMediaQuery('(max-width:498px)');
+    const navigate = useNavigate();
+    const item = data?.data;
 
+    const gotoDetailPage =(item:any)=>{
+       return navigate(`/${item?.manufacturer_id}`, {state:item});
+    }
     return (
-        <Box sx={matches ? styles.respItemsBx : styles.itemsBx}>
-            <Box>
-                <img src={items} alt="" style={styles.itemsImg} />
+        <Box sx={matches ? styles.respItemsBx : styles.itemsBx} onClick={()=>gotoDetailPage(item)}>
+            <Box sx={styles.mainImg}>
+                <img src={item?.image_url || items} alt="" style={styles.itemsImg} />
             </Box>
-            <Box>
-                <Typography variant="h6" sx={styles.desc}>
-                    Lorem ipsum dolor sit amet consectetur.
+            <Box sx={{marginTop:1}}>
+                <Typography variant="h6" sx={styles.nameDesc}>
+                    {item?.name}
                 </Typography>
                 <Typography variant="h6" sx={styles.code}>
-                    411134
+                    {item?.number_of_reviews}
                 </Typography>
                 <Typography variant="h6" sx={styles.code}>
-                    <span style={styles.price}>$ 0.98 </span>/each
+                    <span style={styles.price}>$ {item?.item_price} </span>/each
                 </Typography>
             </Box>
             {

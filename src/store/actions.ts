@@ -1,18 +1,18 @@
 import * as actionTypes from "./actionTypes"
 
-export function addProduct(product: IProduct) {
+export function addProduct(payload:{data:any[],keyword:string}) {
   const action: ProductAction = {
     type: actionTypes.ADD_PRODUCT,
-    product,
+    payload,
   }
 
   return simulateHttpRequest(action)
 }
 
-export function removeProduct(product: IProduct) {
+export function removeProduct(payload:{data:any[],keyword:string}) {
   const action: ProductAction = {
     type: actionTypes.REMOVE_PRODUCT,
-    product,
+    payload,
   }
   return simulateHttpRequest(action)
 }

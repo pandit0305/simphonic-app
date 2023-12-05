@@ -8,6 +8,7 @@ import { createStore, applyMiddleware, Store } from "redux"
 import { Provider } from "react-redux"
 import thunk from "redux-thunk"
 import reducer from "./store/reducer"
+import { BrowserRouter } from "react-router-dom";
 
 const store: Store<ProductState, ProductAction> & {
   dispatch: DispatchType
@@ -17,9 +18,11 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

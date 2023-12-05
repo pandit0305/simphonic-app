@@ -1,16 +1,20 @@
-interface IProduct {
-    id: number
-    title: string
-    desc: string
-  }
+// interface IProduct {
+//    id:number,
+//    name:string,
+//    desc:string
+//   }
   
   type ProductState = {
-    products: IProduct[]
+    products:{
+      data:any[],
+      keyword:string
+    },
+    
   }
   
   type ProductAction = {
     type: string
-    product: IProduct
+    payload: IProduct
   }
   
   type DispatchType = (args: ProductAction) => ProductAction

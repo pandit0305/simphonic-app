@@ -1,11 +1,14 @@
 import React from 'react'
-import { Box, InputBase, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Box, Divider, InputBase, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import { styles } from '../../styles/style';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import banner from '../../assets/images/banner.png';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Dispatch } from "redux";
+import { useDispatch } from "react-redux";
+import { addProduct } from '../../store/actions';
 
 const Search = styled('div')(({ theme }) => ({
   backgroundColor: '#FFFFFF',
@@ -42,68 +45,104 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
   },
 }));
+
+const getSearchList = async (keywords: string) => {
+  const options = {
+    method: 'GET',
+    url: 'https://wayfair.p.rapidapi.com/products/search',
+    params: {
+      keyword: `${keywords}`,
+      sortby: '0',
+      curpage: '1',
+      itemsperpage: '48'
+    },
+    headers: {
+      'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
+      'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
+    }
+  };
+
+  try {
+    const response = await axios(options);
+    console.log(response.data);
+    const list = response.data?.response?.product_collection;
+    return list;
+  } catch (error) {
+    console.error(error);
+  }
+}
+const getList = async () => {
+  const options = {
+    // method: 'GET',
+    // url: 'https://wayfair.p.rapidapi.com/categories/list',
+    // params: { caid: '214970' },
+    // headers: {
+    //   'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
+    //   'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
+    // }
+  };
+
+  try {
+    const response = await axios(options);
+    const list = response.data?.response?.categoryAppData?.departmentCategories;
+    console.log(list);
+    return list;
+  } catch (error) {
+    console.error(error);
+  }
+}
 function Home() {
   const matches = useMediaQuery('(max-width:800px)');
   const [value, setValue] = React.useState('');
   const [text, setText] = React.useState('');
+  const [search, setSearch] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
+  const [searchList, setSearchList] = React.useState([]);
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const navigate = useNavigate();
+  const dispatch: Dispatch<any> = useDispatch()
+
+  const handleChange = async (event: SelectChangeEvent) => {
     setValue(event.target.value);
-  };
-  const onSearchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
-    console.log(event.target.value);
-    setText(input)
-  }
-  const getList = async () => {
-    const options = {
-      // method: 'GET',
-      // url: 'https://wayfair.p.rapidapi.com/categories/list',
-      // params: { caid: '214970' },
-      // headers: {
-      //   'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
-      //   'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
-      // }
-    };
-
     try {
-      const response = await axios(options);
-      const list = response.data?.response?.categoryAppData?.departmentCategories;
-      console.log(list);
+      const list = await getList();
       setCategories(list);
-      // categoryId
-      // displayName
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
-  }
-  const onSearch = async() => {
-    const options = {
-      method: 'GET',
-      url: 'https://wayfair.p.rapidapi.com/products/search',
-      params: {
-        keyword: `${text}`,
-        sortby: '0',
-        curpage: '1',
-        itemsperpage: '48'
-      },
-      headers: {
-        'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
-        'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
-      }
-    };
+  };
 
-    try {
-      // const response = await axios(options);
-      // console.log(response.data);
-    } catch (error) {
-      console.error(error);
+  const onSearchHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.target.value;
+    if (input) {
+      setSearch(true);
+      setText(input)
+      try {
+        const id = setTimeout(async () => {
+          const list = await getSearchList(input);
+          setSearchList(list);
+        }, 0);
+        return () => clearTimeout(id);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setSearch(false);
     }
+    
   }
-  React.useEffect(() => {
-    getList();
-  }, [])
+  const onSearch = () => {
+    setSearch(false);
+    dispatch(addProduct({data:searchList, keyword:text}));
+    navigate('/products');
+  }
+
+  const onSelected = async (list: any) => {
+    setSearch(false);
+    dispatch(addProduct({data:searchList, keyword:text}));
+    navigate('/products');
+  }
+
   return (
     <>
       <Box sx={styles.pad}>
@@ -118,7 +157,7 @@ function Home() {
                 <MenuItem value=""><em>All Categories</em></MenuItem>
                 {
                   categories.length > 0 && categories.map((category: { categoryId: number, displayName: string }) => (
-                    <MenuItem key={category.categoryId} value={category.categoryId}>{category.displayName}</MenuItem>
+                    <MenuItem key={category.categoryId + Math.random()} value={category.categoryId}>{category.displayName}</MenuItem>
                   ))
                 }
               </Select>
@@ -132,11 +171,26 @@ function Home() {
                 onChange={onSearchHandler}
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
+                value={text}
               />
               <SearchIconWrapper onClick={onSearch}>
                 <SearchIcon sx={{ color: 'white' }} />
               </SearchIconWrapper>
             </Search>
+            {
+              search && (
+                <Box sx={styles.inputBox}>
+                  {
+                    searchList && searchList.map((list: { name: string, manufacturer_id: number }) => (
+                      <Box key={list.manufacturer_id + Math.random()}>
+                        <Typography sx={styles.textInput} onClick={() => onSelected(list)}>{list?.name}</Typography>
+                        <Divider />
+                      </Box>
+                    ))
+                  }
+                </Box>
+              )
+            }
           </Box>
 
           {
@@ -147,7 +201,6 @@ function Home() {
                 </Box>
                 <Box sx={styles.mr2}>
                   <Select sx={styles.bx} value={value}
-                    onChange={handleChange}
                     displayEmpty
                     inputProps={{ 'aria-label': 'Without label' }}>
                     <MenuItem value=""> <em>Filter</em></MenuItem>
@@ -158,7 +211,6 @@ function Home() {
                 </Box>
                 <Box sx={styles.mr2}>
                   <Select sx={styles.bx} value={value}
-                    onChange={handleChange}
                     displayEmpty
                     inputProps={{ 'aria-label': 'Without label' }}>
                     <MenuItem value=""> <em>Sort By</em></MenuItem>
@@ -232,9 +284,6 @@ function Home() {
             ) : ''
           }
         </Box>
-      </Box>
-      <Box>
-        <img src={banner} alt="banner_image" style={styles.banner} />
       </Box>
     </>
   )
