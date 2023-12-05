@@ -73,19 +73,18 @@ const getSearchList = async (keywords: string) => {
 }
 const getList = async () => {
   const options = {
-    // method: 'GET',
-    // url: 'https://wayfair.p.rapidapi.com/categories/list',
-    // params: { caid: '214970' },
-    // headers: {
-    //   'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
-    //   'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
-    // }
+    method: 'GET',
+    url: 'https://wayfair.p.rapidapi.com/categories/list',
+    params: { caid: '214970' },
+    headers: {
+      'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
+      'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
+    }
   };
 
   try {
     const response = await axios(options);
     const list = response.data?.response?.categoryAppData?.departmentCategories;
-    console.log(list);
     return list;
   } catch (error) {
     console.error(error);
@@ -102,14 +101,9 @@ function Home() {
   const navigate = useNavigate();
   const dispatch: Dispatch<any> = useDispatch()
 
-  const handleChange = async (event: SelectChangeEvent) => {
+  const handleChange = (event: SelectChangeEvent) => {
     setValue(event.target.value);
-    try {
-      const list = await getList();
-      setCategories(list);
-    } catch (error) {
-      console.log(error);
-    }
+
   };
 
   const onSearchHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +136,19 @@ function Home() {
     dispatch(addProduct({data:searchList, keyword:text}));
     navigate('/products');
   }
+
+  const getCateList =async()=>{
+    try {
+      const list = await getList();
+      setCategories(list);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  React.useEffect(()=>{
+    getCateList();
+  },[0])
 
   return (
     <>
