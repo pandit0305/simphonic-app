@@ -5,16 +5,17 @@
 //   }
   
   type ProductState = {
-    products:{
       data:any[],
-      keyword:string
-    },
-    
+      keyword:string,
+     isLoading:boolean,
+     isError:boolean
   }
   
   type ProductAction = {
     type: string
     payload: IProduct
   }
-  
+  type ProductRequestAndFailure ={
+    type:string
+  }
   type DispatchType = (args: ProductAction) => ProductAction

@@ -127,13 +127,13 @@ function Home() {
   }
   const onSearch = () => {
     setSearch(false);
-    dispatch(addProduct({data:searchList, keyword:text}));
+    dispatch(addProduct({data:searchList, keyword:text, isLoading:true,isError:false}));
     navigate('/products');
   }
 
   const onSelected = async (list: any) => {
     setSearch(false);
-    dispatch(addProduct({data:searchList, keyword:text}));
+    dispatch(addProduct({data:searchList, keyword:text, isLoading:true, isError:false}));
     navigate('/products');
   }
 
@@ -161,9 +161,9 @@ function Home() {
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
               >
-                <MenuItem value=""><em>All Categories</em></MenuItem>
+                <MenuItem value={value}><em>All Categories</em></MenuItem>
                 {
-                  categories.length > 0 && categories.map((category: { categoryId: number, displayName: string }) => (
+                  categories && categories.map((category: { categoryId: number, displayName: string }) => (
                     <MenuItem key={category.categoryId + Math.random()} value={category.categoryId}>{category.displayName}</MenuItem>
                   ))
                 }
@@ -233,7 +233,7 @@ function Home() {
                     displayEmpty
                     inputProps={{ 'aria-label': 'Without label' }}
                   >
-                    <MenuItem value=""><em>All Categories</em></MenuItem>
+                    <MenuItem value={value}><em>All Categories</em></MenuItem>
                     {
                       categories.length > 0 && categories.map((category: { categoryId: number, displayName: string }) => (
                         <MenuItem key={category.categoryId} value={category.categoryId}>{category.displayName}</MenuItem>

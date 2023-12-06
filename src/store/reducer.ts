@@ -1,10 +1,10 @@
 import * as actionTypes from "./actionTypes"
 
 const initialState: ProductState = {
-  products:{
     data:[],
-    keyword:""
-  }
+    keyword:"",
+    isLoading:false,
+    isError:false
 }
 
 const reducer = (
@@ -14,12 +14,25 @@ const reducer = (
   const { type, payload } = action;
   console.log(payload);
   switch (type) {
-    case actionTypes.ADD_PRODUCT:
-
+    case actionTypes.GET_PRODUCT_REQUEST:
       return {
         ...state,
-        products: payload,
+        isLoading:true,
+        isError:false
       }
+      case actionTypes.GET_PRODUCT_SUCCESS:
+        return {
+          ...state,
+          data: payload,
+          isLoading:false,
+          isError:false
+        }
+        case actionTypes.GET_PRODUCT_FAILURE:
+          return {
+            ...state,
+            isLoading:false,
+            isError:true
+          }
     default:
       return state;
   }

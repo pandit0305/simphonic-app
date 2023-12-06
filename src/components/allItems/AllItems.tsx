@@ -90,7 +90,7 @@ const AllItems = () => {
   }, [0])
 
   const gotoViewPage = () => {
-    dispatch(addProduct({ data: list, keyword: "" }));
+    dispatch(addProduct({ data: list, keyword: "",isLoading:true, isError:false}));
     navigate('/products')
   }
   return (
@@ -102,7 +102,7 @@ const AllItems = () => {
         </Box>
         <Box sx={matches ? styles.respBx4 : styles.bx4}>
           {
-            list.length > 0 && list.map((res: any, index:number) => {
+            list && list.map((res: any, index:number) => {
               if(index < 10){
                 return <ProductCard key={res.manufacturer_id + Math.random()} data={res} />
               }

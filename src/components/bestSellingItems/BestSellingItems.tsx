@@ -96,7 +96,7 @@ const BestSellingItems = () => {
                 <Box sx={styles.slider}>
                     <Slider {...settings}>
                         {
-                            list.length > 0 && list.map((res: any) => (
+                            list && list.map((res: any) => (
                                 <Box sx={styles.sliderBx}>
                                     <ProductCard key={res.manufacturer_id + Math.random()} data={res} />
                                 </Box>
