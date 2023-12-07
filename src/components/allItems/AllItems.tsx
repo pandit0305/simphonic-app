@@ -11,18 +11,18 @@ import { useDispatch } from "react-redux";
 
 const getSearchList = async (keywords: string) => {
   const options = {
-    method: 'GET',
-    url: 'https://wayfair.p.rapidapi.com/products/search',
-    params: {
-      keyword: `${keywords}`,
-      sortby: '0',
-      curpage: '1',
-      itemsperpage: '48'
-    },
-    headers: {
-      'X-RapidAPI-Key': 'bd4bcc618cmshe7110a5ab7ceadap1510dejsnb7786dfb19a3',
-      'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
-    }
+    // method: 'GET',
+    // url: 'https://wayfair.p.rapidapi.com/products/search',
+    // params: {
+    //   keyword: `${keywords}`,
+    //   sortby: '0',
+    //   curpage: '1',
+    //   itemsperpage: '48'
+    // },
+    // headers: {
+    //   'X-RapidAPI-Key': 'bd4bcc618cmshe7110a5ab7ceadap1510dejsnb7786dfb19a3',
+    //   'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
+    // }
   };
 
   try {

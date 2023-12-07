@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Divider, InputBase, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Autocomplete, Box, Divider, InputBase, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
 import { styles } from '../../styles/style';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
@@ -15,6 +15,8 @@ const Search = styled('div')(({ theme }) => ({
   width: '100%',
   display: 'flex',
   borderRadius: '5px',
+  height:'55px'
+
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -45,7 +47,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
   },
 }));
-
 const getSearchList = async (keywords: string) => {
   const options = {
     method: 'GET',
@@ -57,11 +58,10 @@ const getSearchList = async (keywords: string) => {
       itemsperpage: '48'
     },
     headers: {
-      'X-RapidAPI-Key': 'bd4bcc618cmshe7110a5ab7ceadap1510dejsnb7786dfb19a3',
+      'X-RapidAPI-Key': 'dc2410b7d1msh3ba387ec63350f6p19c227jsn59fd5f96fdca',
       'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
     }
   };
-
   try {
     const response = await axios(options);
     console.log(response.data);
@@ -73,13 +73,13 @@ const getSearchList = async (keywords: string) => {
 }
 const getList = async () => {
   const options = {
-    method: 'GET',
-    url: 'https://wayfair.p.rapidapi.com/categories/list',
-    params: { caid: '214970' },
-    headers: {
-      'X-RapidAPI-Key': 'bd4bcc618cmshe7110a5ab7ceadap1510dejsnb7786dfb19a3',
-      'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
-    }
+    // method: 'GET',
+    // url: 'https://wayfair.p.rapidapi.com/categories/list',
+    // params: { caid: '214970' },
+    // headers: {
+    //   'X-RapidAPI-Key': 'bd4bcc618cmshe7110a5ab7ceadap1510dejsnb7786dfb19a3',
+    //   'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
+    // }
   };
 
   try {
@@ -97,7 +97,7 @@ function Home() {
   const [search, setSearch] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
   const [searchList, setSearchList] = React.useState([]);
-
+  const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const dispatch: Dispatch<any> = useDispatch()
 
@@ -109,16 +109,16 @@ function Home() {
   const onSearchHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
     if (input) {
+      setLoading(true);
       setSearch(true);
       setText(input)
       try {
-        const id = setTimeout(async () => {
           const list = await getSearchList(input);
           setSearchList(list);
-        }, 0);
-        return () => clearTimeout(id);
+          setLoading(false)
       } catch (error) {
         console.log(error);
+        setLoading(false)
       }
     } else {
       setSearch(false);
@@ -131,7 +131,7 @@ function Home() {
     navigate('/products');
   }
 
-  const onSelected = async (list: any) => {
+  const onSelected = async () => {
     setSearch(false);
     dispatch(addProduct({data:searchList, keyword:text}));
     navigate('/products');
@@ -187,10 +187,13 @@ function Home() {
             {
               search && (
                 <Box sx={styles.inputBox}>
+                    {
+                      loading && (<Typography sx={{textAlign:'center', paddingTop:"10px"}}>Loading...</Typography>)
+                    }
                   {
                     searchList && searchList.map((list: { name: string, manufacturer_id: number }) => (
                       <Box key={list.manufacturer_id + Math.random()}>
-                        <Typography sx={styles.textInput} onClick={() => onSelected(list)}>{list?.name}</Typography>
+                        <Typography sx={styles.textInput} onClick={onSelected}>{list?.name}</Typography>
                         <Divider />
                       </Box>
                     ))
@@ -297,3 +300,14 @@ function Home() {
 }
 
 export default Home;
+
+
+const top100Films = [
+  { name: 'The Shawshank Redemption', year: 1994 },
+  { name: 'The Godfather', year: 1972 },
+  { name: 'The Godfather: Part II', year: 1974 },
+  { name: 'The Dark Knight', year: 2008 },
+  { name: '12 Angry Men', year: 1957 },
+  { name: "Schindler's List", year: 1993 },
+  { name: 'Pulp Fiction', year: 1994 },
+ ];
