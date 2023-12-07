@@ -9,17 +9,13 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux";
 const ViewPage = () => {
   const matches = useMediaQuery('(max-width:498px)');
 
-  const {data, keyword, isLoading} = useSelector(
+  const product:{data:any[],keyword:string } = useSelector(
     (state: ProductState) => {
-      return {
-        data : state.data,
-        keyword: state.keyword,
-        isLoading: state.isLoading
-      }
+      return state
     },
     shallowEqual
   )
-  console.log(data);
+  console.log(product);
   return (
     <Box>
       <Home />
@@ -28,14 +24,14 @@ const ViewPage = () => {
         <Box >
           <Box sx={matches ? styles.respHeading : styles.headingBx}>
             {
-              keyword && (
-                <Typography variant="h5" sx={styles.heading}>"{keyword}" <br /><span style={styles.code}>Found {data.length} items</span></Typography>
+              product?.keyword && (
+                <Typography variant="h5" sx={styles.heading}>"{product?.keyword}" <br /><span style={styles.code}>Found {product?.data.length} items</span></Typography>
               )
             }
           </Box>
           <Box sx={matches ? styles.respBx4 : styles.bx4}>
             {
-              data && data.map((res: any) => (
+              product?.data && product?.data.map((res: any) => (
                 <ProductCard key={res.manufacturer_id + Math.random()} data={res} />
               ))
             }

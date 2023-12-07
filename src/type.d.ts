@@ -7,8 +7,6 @@
   type ProductState = {
       data:any[],
       keyword:string,
-     isLoading:boolean,
-     isError:boolean
   }
   
   type ProductAction = {

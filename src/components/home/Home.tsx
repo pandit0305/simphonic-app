@@ -57,7 +57,7 @@ const getSearchList = async (keywords: string) => {
       itemsperpage: '48'
     },
     headers: {
-      'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
+      'X-RapidAPI-Key': 'bd4bcc618cmshe7110a5ab7ceadap1510dejsnb7786dfb19a3',
       'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
     }
   };
@@ -77,7 +77,7 @@ const getList = async () => {
     url: 'https://wayfair.p.rapidapi.com/categories/list',
     params: { caid: '214970' },
     headers: {
-      'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
+      'X-RapidAPI-Key': 'bd4bcc618cmshe7110a5ab7ceadap1510dejsnb7786dfb19a3',
       'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
     }
   };
@@ -127,13 +127,13 @@ function Home() {
   }
   const onSearch = () => {
     setSearch(false);
-    dispatch(addProduct({data:searchList, keyword:text, isLoading:true,isError:false}));
+    dispatch(addProduct({data:searchList, keyword:text}));
     navigate('/products');
   }
 
   const onSelected = async (list: any) => {
     setSearch(false);
-    dispatch(addProduct({data:searchList, keyword:text, isLoading:true, isError:false}));
+    dispatch(addProduct({data:searchList, keyword:text}));
     navigate('/products');
   }
 
@@ -235,7 +235,7 @@ function Home() {
                   >
                     <MenuItem value={value}><em>All Categories</em></MenuItem>
                     {
-                      categories.length > 0 && categories.map((category: { categoryId: number, displayName: string }) => (
+                      categories && categories.map((category: { categoryId: number, displayName: string }) => (
                         <MenuItem key={category.categoryId} value={category.categoryId}>{category.displayName}</MenuItem>
                       ))
                     }

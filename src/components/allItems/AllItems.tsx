@@ -20,7 +20,7 @@ const getSearchList = async (keywords: string) => {
       itemsperpage: '48'
     },
     headers: {
-      'X-RapidAPI-Key': '5c798b513fmshbea314e3e145a59p1ca7e6jsnb19696403526',
+      'X-RapidAPI-Key': 'bd4bcc618cmshe7110a5ab7ceadap1510dejsnb7786dfb19a3',
       'X-RapidAPI-Host': 'wayfair.p.rapidapi.com'
     }
   };
@@ -90,7 +90,7 @@ const AllItems = () => {
   }, [0])
 
   const gotoViewPage = () => {
-    dispatch(addProduct({ data: list, keyword: "",isLoading:true, isError:false}));
+    dispatch(addProduct({ data: list, keyword: ""}));
     navigate('/products')
   }
   return (
