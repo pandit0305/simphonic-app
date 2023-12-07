@@ -3,19 +3,19 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 import { styles } from '../../styles/style';
 import Home from '../../components/home/Home';
 import ProductCard from '../../components/productCard/ProductCard';
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 
 
 const ViewPage = () => {
   const matches = useMediaQuery('(max-width:498px)');
 
-  const product:{data:any[],keyword:string } = useSelector(
+  const products  = useSelector(
     (state: ProductState) => {
-      return state
+      return state.products
     },
     shallowEqual
   )
-  console.log(product);
+  console.log(products);
   return (
     <Box>
       <Home />
@@ -24,14 +24,14 @@ const ViewPage = () => {
         <Box >
           <Box sx={matches ? styles.respHeading : styles.headingBx}>
             {
-              product?.keyword && (
-                <Typography variant="h5" sx={styles.heading}>"{product?.keyword}" <br /><span style={styles.code}>Found {product?.data.length} items</span></Typography>
+              products?.keyword && (
+                <Typography variant="h5" sx={styles.heading}>"{products?.keyword}" <br /><span style={styles.code}>Found {products?.data.length} items</span></Typography>
               )
             }
           </Box>
           <Box sx={matches ? styles.respBx4 : styles.bx4}>
             {
-              product?.data && product?.data.map((res: any) => (
+              products?.data && products?.data.map((res: any) => (
                 <ProductCard key={res.manufacturer_id + Math.random()} data={res} />
               ))
             }

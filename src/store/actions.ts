@@ -1,6 +1,6 @@
 import * as actionTypes from "./actionTypes"
 
-export function addProduct(payload:ProductState) {
+export function addProduct(payload:{data:any[], keyword:string}) {
   const action: ProductAction = {
     type: actionTypes.GET_PRODUCT_SUCCESS,
     payload,
@@ -20,7 +20,6 @@ export function getProductFailure() {
   const action: ProductRequestAndFailure= {
     type: actionTypes.GET_PRODUCT_FAILURE,
   }
-
 }
 
 export function removeProduct(payload:ProductState) {

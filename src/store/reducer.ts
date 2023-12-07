@@ -1,8 +1,10 @@
 import * as actionTypes from "./actionTypes"
 
 const initialState: ProductState = {
+  products:{
     data:[],
     keyword:"",
+  }
 }
 
 const reducer = (
@@ -19,7 +21,7 @@ const reducer = (
       case actionTypes.GET_PRODUCT_SUCCESS:
         return {
           ...state,
-          data: payload,
+          products: payload,
         }
         case actionTypes.GET_PRODUCT_FAILURE:
           return {

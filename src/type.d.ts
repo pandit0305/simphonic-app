@@ -5,8 +5,10 @@
 //   }
   
   type ProductState = {
+    products:{
       data:any[],
       keyword:string,
+    }
   }
   
   type ProductAction = {

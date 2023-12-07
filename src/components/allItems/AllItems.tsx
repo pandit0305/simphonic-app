@@ -90,7 +90,7 @@ const AllItems = () => {
   }, [0])
 
   const gotoViewPage = () => {
-    dispatch(addProduct({ data: list, keyword: ""}));
+    dispatch(addProduct({data:list, keyword: "All Items"}));
     navigate('/products')
   }
   return (
